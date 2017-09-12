@@ -3,6 +3,7 @@ title: "Explore Red Wine Data"
 output:
   html_document:
     number_sections: yes
+    self_contained: no
     toc: yes
   html_notebook:
     number_sections: yes
