@@ -1,9 +1,160 @@
 ---
 title: "Explore Red Wine Data"
-output: html_notebook
+output:
+  html_document:
+    toc: yes
+  html_notebook:
+    number_sections: yes
+    toc: yes
 ---
 
-## Introduction
+# Introduction
 
 In this report, I will explore the red wine dataset. First, I will look at each individual attribute of this dataset and plot its distribution. Second, I will look at two attributes at a time to explore 1) how each input attribute is related to the output attribute--quality; 2) interesting pairs of input attributes. Third, I will examine three attributes by adding one additional attribute to some of the interesting two-attribute pairs. Finally, I will summarize the successes and problems I encounter during the data exploration process.
+
+```{r, packages}
+# Load all of the packages in this code chunk.
+library(ggplot2)
+```
+
+```{r}
+# Load the Data
+wine_reds = read.csv('wineQualityReds.csv', row.names = 1)
+```
+
+# Univariate Exploration
+
+In this section, I will first look at the structure of the data set. Then I will examine the distribution of each attribute individually by plotting its distribution.
+
+```{r, Data_Dimensions}
+dim(wine_reds)
+```
+
+```{r, Data_Structure}
+# Convert quality into ordered categorical variable
+wine_reds$quality <- ordered(wine_reds$quality)
+str(wine_reds)
+```
+
+```{r, Data_Summary}
+summary(wine_reds)
+```
+
+The red wine dataset contains 12 variables--11 input numerical variables based on physicochemical tests and 1 categorical output variable (quality) based on sensory data, with 1599 observations.
+
+```{r}
+# Function to plot histogram of a single variable
+plot_uni_var <- function(variable, bins = 50) {
+  return (ggplot(aes_string(x = variable), data = wine_reds) + 
+            geom_histogram(bins = bins))
+}
+```
+
+## Quality
+```{r}
+ggplot(aes(x = quality), data = wine_reds) + 
+  geom_bar()
+```
+
+Out of the possible quality scores between 0 and 10, all of our red wines' quality scores fall between 3 and 8. The dataset is not well balanced. Majority of red wines have a quality score of either 5 or 6. I am curious about what attributes make a wine earn a low quality score (quality = 3) or a high quality score (quality = 8).
+
+## Fixed Acidity
+Most acids involved with wine are fixed or nonvolatile (do not evaporate readily).
+```{r}
+plot_uni_var('fixed.acidity')
+plot_uni_var('fixed.acidity') + scale_x_log10()
+```
+
+Fixed acidity values range between 4 and 16, with most values range between 7 and 9. The distribution is slightly positively skewed. Transforming the x-axis into log scale can make it more normally distributed.
+
+## Volatile Acidity
+The amount of acetic acid in wine, which at too high of levels can lead to an unpleasant, vinegar taste.
+```{r}
+plot_uni_var('volatile.acidity')
+plot_uni_var('volatile.acidity') + scale_x_continuous(limits = c(0, 1))
+```
+
+Fixed acidity values range between 0.1 and 1.6, with most values range between 0.3 and 0.7. The distribution is slightly positively skewed. When zoom in to values below 1, the distribution seems normal.
+
+## Citric Acid
+Found in small quantities, citric acid can add 'freshness' and flavor to wines.
+```{r}
+plot_uni_var('citric.acid')
+```
+
+```{r}
+# number of red wines with citric acid = 0
+dim(wine_reds[wine_reds$citric.acid ==0, ])[1]
+```
+
+Citric acid values range between 0 and 1 with most values below 0.6. There are 132 red wines in our data set with no detectable citric acid concentration.
+
+## Residual Sugar
+The amount of sugar remaining after fermentation stops, it is rare to find wines with less than 1 gram/liter and wines with greater than 45 grams/liter are considered sweet.
+```{r}
+plot_uni_var('residual.sugar')
+plot_uni_var('residual.sugar') + scale_x_continuous(limits = c(0, 5))
+```
+
+Most residual sugar values range between 1.5 and 2.5. There are a few outliers with large values. When zoom in and look at values below 5, the distribution appears normal.
+
+## Chlorides
+The amount of salt in the wine.
+```{r}
+plot_uni_var('chlorides')
+plot_uni_var('chlorides') + scale_x_continuous(limits = c(0, 0.2))
+```
+
+Most chlorides values range between 0.05 to 0.1. There are a few outliers with large values. When zoom in and look at values below 0.2, the distribution appears normal.
+
+## Free Sulfur Dioxide
+The free form of SO2 exists in equilibrium between molecular SO2 (as a dissolved gas) and bisulfite ion; it prevents microbial growth and the oxidation of wine.
+```{r}
+plot_uni_var('free.sulfur.dioxide')
+```
+
+The distribution of free sulfur dioxide is highly positively skewed.
+
+## Total Sulfur Dioxide
+The amount of free and bound forms of S02; in low concentrations, SO2 is mostly undetectable in wine, but at free SO2 concentrations over 50 ppm, SO2 becomes evident in the nose and taste of wine.
+
+```{r}
+plot_uni_var('total.sulfur.dioxide')
+plot_uni_var('total.sulfur.dioxide') + scale_x_log10()
+```
+
+The distribution of total sulfur dioxide is higly positively skewed. And there are a few outliers with very large values. Transforming the x-axis into log scale can make it more normally distributed.
+
+## Density
+The density of wine is close to that of water depending on the percent alcohol and sugar content.
+```{r}
+plot_uni_var('density')
+```
+
+Density values range between 0.990 and 1.004 with most values range from 0.995 and 0.998. The distribution of density values are symmetrical centered around 0.9965.
+
+## pH
+Describes how acidic or basic a wine is on a scale from 0 (very acidic) to 14 (very basic); most wines are between 3-4 on the pH scale.
+```{r}
+plot_uni_var('pH')
+```
+
+Most pH values range between 3.15 and 3.45. The distribution of pH is symmetrical centered around 3.3.
+
+## Sulphates
+A wine additive which can contribute to sulfur dioxide gas (S02) levels, wich acts as an antimicrobial and antioxidant.
+```{r}
+plot_uni_var('sulphates')
+plot_uni_var('sulphates') + scale_x_log10()
+```
+
+Most sulphates values range between 0.5 and 0.75. The distribution is positively skewed. There are a few ourliers with large sulphates values. Transforming the x-axis into log scale can make it more normally distributed.
+
+## Alcohol
+The percent alcohol content of the wine
+```{r}
+plot_uni_var('alcohol')
+```
+
+The alcohol values range between 8.5 and 15. The distribution of alcohol value is positively skewed.
 
