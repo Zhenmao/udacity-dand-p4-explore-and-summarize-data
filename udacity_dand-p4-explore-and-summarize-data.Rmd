@@ -181,3 +181,95 @@ No.
 
 The possible quality values are from 0 to 10, but our data set only has quality values from 3 to 8, which means there are no extremely bad red wines or extrememly good wines in out data set. The vast majority of red wines in the data set has a quality value either 5 or 6, with very fewer wines with quality values 3, 4, 7 or 8, which makes the data set unbalanced.
 
+# Bivariate Exploration Part I
+
+In this section, I will look at how each input attribute is related to the output quanlity variable.
+
+```{r}
+# Function to plot boxplot of variable grouped by quality
+plot_quality_vs_var <- function(variable) {
+  # Uncomment the next line to print a summary of variable grouped by quality values
+  # print (by(wine_reds[[variable]], wine_reds$quality, summary))
+  return (ggplot(aes_string(x = 'quality', y = variable), data = wine_reds) + 
+            geom_boxplot())
+}
+```
+
+## Quality vs Fixed Acidity
+```{r}
+plot_quality_vs_var('fixed.acidity')
+```
+
+There isn't a clear trend between fixed acidity and quality.
+
+## Quality vs Volatile Acidity
+```{r}
+plot_quality_vs_var('volatile.acidity')
+```
+
+The higher the quality, the lower the volatile acidity.
+
+## Quality vs Citric Acid
+```{r}
+plot_quality_vs_var('citric.acid')
+```
+
+The higher the quality, the higher the citric acid.
+
+## Quality vs Residual Sugar
+```{r}
+plot_quality_vs_var('residual.sugar')
+```
+
+There isn't a clear trend between residual sugar and quality.
+
+## Quality vs Chlorides
+```{r}
+plot_quality_vs_var('chlorides')
+plot_quality_vs_var('chlorides') + scale_y_continuous(limits = c(0.05, 0.15))
+```
+
+After zoom in, one can see the higher the quality, the lower the chlorides.
+
+## Quality vs Free Sulfur Dioxide
+```{r}
+plot_quality_vs_var('free.sulfur.dioxide')
+```
+
+There isn't a clear trend between free sulfur dioxide and quality.
+
+## Quality vs Total Sulfur Dioxide
+```{r}
+plot_quality_vs_var('total.sulfur.dioxide')
+```
+
+There isn't a clear trend between total sulfur dioxide and quality.
+
+## Quality vs Density
+```{r}
+plot_quality_vs_var('density')
+```
+
+The higher the quality, the lower the density.
+
+## Quality vs pH
+```{r}
+plot_quality_vs_var('pH')
+```
+
+The higher the quality, the lower the pH.
+
+## Quality vs Sulphates
+```{r}
+plot_quality_vs_var('sulphates')
+```
+
+The higher the quality, the higher the sulphates.
+
+## Quality vs Alcohol
+```{r}
+plot_quality_vs_var('alcohol')
+```
+
+The higher the quality, the higher the alcohol.
+
