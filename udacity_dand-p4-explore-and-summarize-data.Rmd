@@ -1,0 +1,9 @@
+---
+title: "Explore Red Wine Data"
+output: html_notebook
+---
+
+## Introduction
+
+In this report, I will explore the red wine dataset. First, I will look at each individual attribute of this dataset and plot its distribution. Second, I will look at two attributes at a time to explore 1) how each input attribute is related to the output attribute--quality; 2) interesting pairs of input attributes. Third, I will examine three attributes by adding one additional attribute to some of the interesting two-attribute pairs. Finally, I will summarize the successes and problems I encounter during the data exploration process.
+
