@@ -2,6 +2,7 @@
 title: "Explore Red Wine Data"
 output:
   html_document:
+    number_sections: yes
     toc: yes
   html_notebook:
     number_sections: yes
@@ -157,4 +158,26 @@ plot_uni_var('alcohol')
 ```
 
 The alcohol values range between 8.5 and 15. The distribution of alcohol value is positively skewed.
+
+# Univariate Analysis
+
+**What is the structure of your dataset?**
+
+There are 12 attributes in the dataset. 11 of them (fixed acidity, volatile acidity, citric acid, residual sugar, chlorides, free sulfur dioxide, total sulfur dioxide, density, pH, sulphates, alcohol) are input attributes based on physicochemical tests. The other attribute (quality) is the output attribute based on sensory data. Each row corresponds to one particular wine with total 1599 different red wines in the data set.
+
+**What is/are the main feature(s) of interest in your dataset?**
+
+The main feature of interest is the output attribute quality. I am trying to figure out which of the 11 input attribute contribute to a high quality value.
+
+**What other features in the dataset do you think will help support your investigation into your feature(s) of interest?**
+
+The 11 input attributes are equally likely to contribute to the quality value at this point. I will look more closely at how each of the attributes is distributed with a given quality value in the bivariate exploration section.
+
+**Did you create any new variables from existing variables in the dataset?**
+
+No.
+
+**Of the features you investigated, were there any unusual distributions? Did you perform any operations on the data to tidy, adjust, or change the form of the data? If so, why did you do this?**
+
+The possible quality values are from 0 to 10, but our data set only has quality values from 3 to 8, which means there are no extremely bad red wines or extrememly good wines in out data set. The vast majority of red wines in the data set has a quality value either 5 or 6, with very fewer wines with quality values 3, 4, 7 or 8, which makes the data set unbalanced.
 
