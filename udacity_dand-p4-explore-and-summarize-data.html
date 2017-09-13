@@ -173,6 +173,7 @@ $(document).ready(function () {
 <li><a href="#ph-vs-fixed-acidity-and-citric-acid"><span class="toc-section-number">8.1</span> pH vs Fixed Acidity and Citric Acid</a></li>
 <li><a href="#density-vs-alcohol-and-fixed-acidity"><span class="toc-section-number">8.2</span> Density vs Alcohol and Fixed Acidity</a></li>
 </ul></li>
+<li><a href="#linear-models"><span class="toc-section-number">9</span> Linear Models</a></li>
 </ul>
 </div>
 
@@ -182,7 +183,18 @@ $(document).ready(function () {
 <pre class="r"><code># Load all of the packages in this code chunk.
 library(ggplot2)
 library(corrplot)
-library(RColorBrewer)</code></pre>
+library(RColorBrewer)
+library(memisc)</code></pre>
+<pre><code>## Loading required package: lattice</code></pre>
+<pre><code>## Loading required package: MASS</code></pre>
+<pre><code>## 
+## Attaching package: &#39;memisc&#39;</code></pre>
+<pre><code>## The following objects are masked from &#39;package:stats&#39;:
+## 
+##     contr.sum, contr.treatment, contrasts</code></pre>
+<pre><code>## The following object is masked from &#39;package:base&#39;:
+## 
+##     as.array</code></pre>
 <pre class="r"><code># Load the Data
 wine_reds = read.csv(&#39;wineQualityReds.csv&#39;, row.names = 1)</code></pre>
 </div>
@@ -665,6 +677,74 @@ plot_tri_var(&#39;alcohol&#39;, &#39;fixed.acidity&#39;, &#39;density_quantiles&
 <p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
 <p>Fixed acidity is positively correlated with density, and alcohol is negatively correlated with density. We can see from the plot that fixed acidity has a larger impact on the density of wine than alcohol. Because for a given alcohol value, the density increases as fixed acidity increases, whereas for a given fixed acidity value, the density does not change as the alcohol increases.</p>
 </div>
+</div>
+<div id="linear-models" class="section level1">
+<h1><span class="header-section-number">9</span> Linear Models</h1>
+<p>In order to fit a linear model, I will convert quality from ordered factors back into real numbers.</p>
+<ul>
+<li>First model I will only look at the most promising attribute volatile acidity from univariate exploration section.</li>
+<li>Seconde model I will add the attributes that exhibit a clear trend with quality from the bivariate exploration section besides volatile acidity.</li>
+<li>Third model I will add all the rest variables.</li>
+</ul>
+<pre class="r"><code>m1 &lt;-  lm(as.numeric(levels(quality))[quality] ~ volatile.acidity, 
+          data = wine_reds)
+m2 &lt;- update(m1, ~ . + volatile.acidity + citric.acid + sulphates + alcohol + 
+               chlorides + density + pH)
+m3 &lt;- update(m2, ~ . + fixed.acidity + residual.sugar + free.sulfur.dioxide + 
+               total.sulfur.dioxide)
+mtable(m1, m2, m3, sdigits = 3)</code></pre>
+<pre><code>## 
+## Calls:
+## m1: lm(formula = as.numeric(levels(quality))[quality] ~ volatile.acidity, 
+##     data = wine_reds)
+## m2: lm(formula = as.numeric(levels(quality))[quality] ~ volatile.acidity + 
+##     citric.acid + sulphates + alcohol + chlorides + density + 
+##     pH, data = wine_reds)
+## m3: lm(formula = as.numeric(levels(quality))[quality] ~ volatile.acidity + 
+##     citric.acid + sulphates + alcohol + chlorides + density + 
+##     pH + fixed.acidity + residual.sugar + free.sulfur.dioxide + 
+##     total.sulfur.dioxide, data = wine_reds)
+## 
+## ===========================================================
+##                            m1          m2          m3      
+## -----------------------------------------------------------
+##   (Intercept)            6.566***   -5.885      21.965     
+##                         (0.058)    (11.930)    (21.195)    
+##   volatile.acidity      -1.761***   -1.193***   -1.084***  
+##                         (0.104)     (0.119)     (0.121)    
+##   citric.acid                       -0.269*     -0.183     
+##                                     (0.136)     (0.147)    
+##   sulphates                          0.848***    0.916***  
+##                                     (0.112)     (0.114)    
+##   alcohol                            0.321***    0.276***  
+##                                     (0.020)     (0.026)    
+##   chlorides                         -1.782***   -1.874***  
+##                                     (0.407)     (0.419)    
+##   density                           10.281     -17.881     
+##                                    (11.886)    (21.633)    
+##   pH                                -0.534***   -0.414*    
+##                                     (0.134)     (0.192)    
+##   fixed.acidity                                  0.025     
+##                                                 (0.026)    
+##   residual.sugar                                 0.016     
+##                                                 (0.015)    
+##   free.sulfur.dioxide                            0.004*    
+##                                                 (0.002)    
+##   total.sulfur.dioxide                          -0.003***  
+##                                                 (0.001)    
+## -----------------------------------------------------------
+##   R-squared                 0.153      0.350       0.361   
+##   adj. R-squared            0.152      0.347       0.356   
+##   sigma                     0.744      0.653       0.648   
+##   F                       287.444    122.332      81.348   
+##   p                         0.000      0.000       0.000   
+##   Log-likelihood        -1794.312  -1582.343   -1569.138   
+##   Deviance                883.198    677.509     666.411   
+##   AIC                    3594.624   3182.686    3164.277   
+##   BIC                    3610.756   3231.080    3234.179   
+##   N                      1599       1599        1599       
+## ===========================================================</code></pre>
+<p>As one can see, the most promising attribute volatile acidicy alone has R-squared value of 0.153. By adding the other 6 promsing attributes, R-squared value is a little more than doubled becoming 0.350. But adding the rest 4 attributes only increases the R-squared value a little to 0.361.</p>
 </div>
 
 

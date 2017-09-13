@@ -19,6 +19,7 @@ In this report, I will explore the red wine dataset. First, I will look at each 
 library(ggplot2)
 library(corrplot)
 library(RColorBrewer)
+library(memisc)
 ```
 
 ```{r}
@@ -492,4 +493,24 @@ plot_tri_var('alcohol', 'fixed.acidity', 'density_quantiles')
 ```
 
 Fixed acidity is positively correlated with density, and alcohol is negatively correlated with density. We can see from the plot that fixed acidity has a larger impact on the density of wine than alcohol. Because for a given alcohol value, the density increases as fixed acidity increases, whereas for a given fixed acidity value, the density does not change as the alcohol increases.
+
+# Linear Models
+
+In order to fit a linear model, I will convert quality from ordered factors back into real numbers. 
+
+* First model I will only look at the most promising attribute volatile acidity from univariate exploration section. 
+* Seconde model I will add the attributes that exhibit a clear trend with quality from the bivariate exploration section besides volatile acidity. 
+* Third model I will add all the rest variables.
+
+```{r}
+m1 <-  lm(as.numeric(levels(quality))[quality] ~ volatile.acidity, 
+          data = wine_reds)
+m2 <- update(m1, ~ . + volatile.acidity + citric.acid + sulphates + alcohol + 
+               chlorides + density + pH)
+m3 <- update(m2, ~ . + fixed.acidity + residual.sugar + free.sulfur.dioxide + 
+               total.sulfur.dioxide)
+mtable(m1, m2, m3, sdigits = 3)
+```
+
+As one can see, the most promising attribute volatile acidicy alone has R-squared value of 0.153. By adding the other 6 promsing attributes, R-squared value is a little more than doubled becoming 0.350. But adding the rest 4 attributes only increases the R-squared value a little to 0.361.
 
