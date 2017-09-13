@@ -160,6 +160,7 @@ $(document).ready(function () {
 <li><a href="#density-vs-alcohol"><span class="toc-section-number">5.7</span> Density vs Alcohol</a></li>
 <li><a href="#density-vs-fixed-acidity"><span class="toc-section-number">5.8</span> Density vs Fixed Acidity</a></li>
 </ul></li>
+<li><a href="#bivariate-analysis"><span class="toc-section-number">6</span> Bivariate Analysis</a></li>
 </ul>
 </div>
 
@@ -488,6 +489,87 @@ plot_bi_var &lt;- function(variable1, variable2) {
 <pre><code>## [1] 0.6680473</code></pre>
 <p>Densidy and fixed acidity have a correlation coefficient of 0.6680473. This is probably because fixed acidity in wine is mainly tartaric acid, and tartaric acid has a density of 1.79 g/mL, which is greater than the wine’s main component–water. Therefore, higher concentration of fixed acidity leads to higher density value.</p>
 </div>
+</div>
+<div id="bivariate-analysis" class="section level1">
+<h1><span class="header-section-number">6</span> Bivariate Analysis</h1>
+<p><strong>Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?</strong></p>
+<p>There are a few attributes exhibit some trends that look promising to be used to predict quality.</p>
+<ul>
+<li>Quality is positively correlated with citric acid, sulphates, and alcohol.</li>
+<li>Quality increases is negatively correlated with volatile acidity, chlorides, density, and pH.</li>
+</ul>
+<p>We can summarize these relations in the following table:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Attribute Name</th>
+<th align="center">Relation with Quality</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>fixed acidity</td>
+<td align="center">~</td>
+</tr>
+<tr class="even">
+<td>volatile acidity</td>
+<td align="center">-</td>
+</tr>
+<tr class="odd">
+<td>citric acid</td>
+<td align="center">+</td>
+</tr>
+<tr class="even">
+<td>residual sugar</td>
+<td align="center">~</td>
+</tr>
+<tr class="odd">
+<td>chlorides</td>
+<td align="center">-</td>
+</tr>
+<tr class="even">
+<td>free sulfur dioxide</td>
+<td align="center">~</td>
+</tr>
+<tr class="odd">
+<td>total sulfur dioxide</td>
+<td align="center">~</td>
+</tr>
+<tr class="even">
+<td>density</td>
+<td align="center">-</td>
+</tr>
+<tr class="odd">
+<td>pH</td>
+<td align="center">-</td>
+</tr>
+<tr class="even">
+<td>sulphates</td>
+<td align="center">+</td>
+</tr>
+<tr class="odd">
+<td>alcohol</td>
+<td align="center">+</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>‘~’ means the attribute exhibits no clear trend with quality</li>
+<li>‘-’ means the attribute is negatively correlated with quality</li>
+<li>‘+’ means the attribute is positively correlated with quality</li>
+</ul>
+<p><strong>Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?</strong></p>
+<p>There are a few attributes that are correlated based on physical and chemical principles:</p>
+<ul>
+<li>Fixed acidity and citric acid are positively correlated because the fixed acidity includes citric acid.</li>
+<li>Total sulfur dioxide and free sulfur dioxide are positively correlated because total sulfur dioxide includes free sulfur dioxide.</li>
+<li>Fixed acidity and pH are negatively correlated because higher concentration of fixed acidity makes the wine more acidic, therefore the wine has a lower pH.</li>
+<li>Citric acid and pH are negatively correlated because higher concentration of citric acid, which is non-volatile, makes the wine more acidic, therefore the wine has a lower pH.</li>
+<li>Density and alcohol are negatively correlated because alcohol has a lower density than water, therefore wines that contain more alcohol have a lower density.</li>
+<li>Density and fixed acidity are positively correlated because the main fixed acids in wine, tartaric acid, has a higher density than water, therefore wines that contain more tartaric acid have a higher density.</li>
+</ul>
+<p><strong>What was the strongest relationship you found?</strong></p>
+<p>Observing from the plot, volatile acidity has the strongest relationship with quality.</p>
 </div>
 
 

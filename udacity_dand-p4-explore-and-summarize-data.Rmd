@@ -351,4 +351,47 @@ cor(wine_reds$fixed.acidity, wine_reds$density)
 
 Densidy and fixed acidity have a correlation coefficient of 0.6680473. This is probably because fixed acidity in wine is mainly tartaric acid, and tartaric acid has a density of 1.79 g/mL, which is greater than the wine's main component--water. Therefore, higher concentration of fixed acidity leads to higher density value.
 
+# Bivariate Analysis
+
+**Talk about some of the relationships you observed in this part of the investigation. How did the feature(s) of interest vary with other features in the dataset?**
+
+There are a few attributes exhibit some trends that look promising to be used to predict quality. 
+
+* Quality is positively correlated with citric acid, sulphates, and alcohol.
+* Quality increases is negatively correlated with volatile acidity, chlorides, density, and pH.
+
+We can summarize these relations in the following table:
+
+| Attribute Name       | Relation with Quality |
+|----------------------|:---------------------:|
+| fixed acidity        |           ~           |
+| volatile acidity     |           -           |
+| citric acid          |           +           |
+| residual sugar       |           ~           |
+| chlorides            |           -           |
+| free sulfur dioxide  |           ~           |
+| total sulfur dioxide |           ~           |
+| density              |           -           |
+| pH                   |           -           |
+| sulphates            |           +           |
+| alcohol              |           +           |
+
+* '~' means the attribute exhibits no clear trend with quality
+* '-' means the attribute is negatively correlated with quality
+* '+' means the attribute is positively correlated with quality
+
+**Did you observe any interesting relationships between the other features (not the main feature(s) of interest)?**
+
+There are a few attributes that are correlated based on physical and chemical principles:
+
+* Fixed acidity and citric acid are positively correlated because the fixed acidity includes citric acid.
+* Total sulfur dioxide and free sulfur dioxide are positively correlated because total sulfur dioxide includes free sulfur dioxide.
+* Fixed acidity and pH are negatively correlated because higher concentration of fixed acidity makes the wine more acidic, therefore the wine has a lower pH.
+* Citric acid and pH are negatively correlated because higher concentration of citric acid, which is non-volatile, makes the wine more acidic, therefore the wine has a lower pH.
+* Density and alcohol are negatively correlated because alcohol has a lower density than water, therefore wines that contain more alcohol have a lower density.
+* Density and fixed acidity are positively correlated because the main fixed acids in wine, tartaric acid, has a higher density than water, therefore wines that contain more tartaric acid have a higher density. 
+
+**What was the strongest relationship you found?**
+
+Observing from the plot, volatile acidity has the strongest relationship with quality.
 
