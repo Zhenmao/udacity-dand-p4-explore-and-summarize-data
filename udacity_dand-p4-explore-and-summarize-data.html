@@ -161,13 +161,17 @@ $(document).ready(function () {
 <li><a href="#density-vs-fixed-acidity"><span class="toc-section-number">5.8</span> Density vs Fixed Acidity</a></li>
 </ul></li>
 <li><a href="#bivariate-analysis"><span class="toc-section-number">6</span> Bivariate Analysis</a></li>
-<li><a href="#multivariate-exploration-part-i"><span class="toc-section-number">7</span> Multivariate exploration Part I</a><ul>
+<li><a href="#multivariate-exploration-part-i"><span class="toc-section-number">7</span> Multivariate Exploration Part I</a><ul>
 <li><a href="#quality-vs-volatile-acidity-and-citric-acid"><span class="toc-section-number">7.1</span> Quality vs Volatile Acidity and Citric Acid</a></li>
 <li><a href="#quality-vs-volatile-acidity-and-sulphates"><span class="toc-section-number">7.2</span> Quality vs Volatile Acidity and Sulphates</a></li>
 <li><a href="#quality-vs-volatile-acidity-and-alcohol"><span class="toc-section-number">7.3</span> Quality vs Volatile Acidity and Alcohol</a></li>
 <li><a href="#quality-vs-volatile-acidity-and-chlorides"><span class="toc-section-number">7.4</span> Quality vs Volatile Acidity and Chlorides</a></li>
 <li><a href="#quality-vs-volatile-acidity-and-density"><span class="toc-section-number">7.5</span> Quality vs Volatile Acidity and Density</a></li>
 <li><a href="#quality-vs-volatile-acidity-and-ph"><span class="toc-section-number">7.6</span> Quality vs Volatile Acidity and pH</a></li>
+</ul></li>
+<li><a href="#multivariate-exploration-part-ii"><span class="toc-section-number">8</span> Multivariate Exploration Part II</a><ul>
+<li><a href="#ph-vs-fixed-acidity-and-citric-acid"><span class="toc-section-number">8.1</span> pH vs Fixed Acidity and Citric Acid</a></li>
+<li><a href="#density-vs-alcohol-and-fixed-acidity"><span class="toc-section-number">8.2</span> Density vs Alcohol and Fixed Acidity</a></li>
 </ul></li>
 </ul>
 </div>
@@ -581,7 +585,7 @@ plot_bi_var &lt;- function(variable1, variable2) {
 <p>Observing from the plot, volatile acidity has the strongest relationship with quality.</p>
 </div>
 <div id="multivariate-exploration-part-i" class="section level1">
-<h1><span class="header-section-number">7</span> Multivariate exploration Part I</h1>
+<h1><span class="header-section-number">7</span> Multivariate Exploration Part I</h1>
 <p>In this section, I will first look at how quality, volatile acidity and one other input variable are related.</p>
 <pre class="r"><code># Function to plot scatter plot of variable2 vs variable1 colored by quality
 plot_quality_vs_two_var &lt;- function(variable1, variable2) {
@@ -611,7 +615,7 @@ plot_quality_vs_two_var &lt;- function(variable1, variable2) {
 <h2><span class="header-section-number">7.4</span> Quality vs Volatile Acidity and Chlorides</h2>
 <pre class="r"><code>plot_quality_vs_two_var(&#39;chlorides&#39;, &#39;volatile.acidity&#39;) + 
   scale_x_continuous(limits = c(0, 0.2))</code></pre>
-<pre><code>## Warning: Removed 41 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 42 rows containing missing values (geom_point).</code></pre>
 <p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
 <p>High quality wines tend to have low volatile acidity and low chlorides (lower left corner); low quality wines tend to have high volatile acidity and high chlorides (upper right corner).</p>
 </div>
@@ -626,6 +630,40 @@ plot_quality_vs_two_var &lt;- function(variable1, variable2) {
 <pre class="r"><code>plot_quality_vs_two_var(&#39;pH&#39;, &#39;volatile.acidity&#39;)</code></pre>
 <p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-43-1.png" width="672" /></p>
 <p>High quality wines tend to have low volatile acidity and low pH (lower left corner); low quality wines tend to have high volatile acidity and high pH (upper right corner).</p>
+</div>
+</div>
+<div id="multivariate-exploration-part-ii" class="section level1">
+<h1><span class="header-section-number">8</span> Multivariate Exploration Part II</h1>
+<p>In this section, I will examine the relation among some of input variable triplets.</p>
+<pre class="r"><code># Function to cut given column from wine_reds data set into quantiles
+cut_quantiles &lt;- function(var_to_cut) {
+  return (cut(wine_reds[[var_to_cut]], 
+              breaks = quantile(wine_reds[[var_to_cut]], 
+                                probs = seq(0, 1, 0.25),
+                                na.rm = TRUE),
+                                include.lowest = TRUE))
+}</code></pre>
+<pre class="r"><code># Function to plot scatter plot of variable2 vs variable1 colored by variable3
+plot_tri_var &lt;- function(variable1, variable2, variable3){
+  ggplot(aes_string(x = variable1, y = variable2, color = variable3),
+         data = wine_reds) + 
+    geom_jitter() + 
+    scale_color_brewer(type = &#39;seq&#39;) + 
+    theme_dark()
+}</code></pre>
+<div id="ph-vs-fixed-acidity-and-citric-acid" class="section level2">
+<h2><span class="header-section-number">8.1</span> pH vs Fixed Acidity and Citric Acid</h2>
+<pre class="r"><code>wine_reds$pH_quantiles &lt;- cut_quantiles(&#39;pH&#39;)
+plot_tri_var(&#39;citric.acid&#39;, &#39;fixed.acidity&#39;, &#39;pH_quantiles&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-46-1.png" width="672" /></p>
+<p>Fixed acidity and citric acid both contribute to wines’ pH values. The lower both acids concentrations, the higher the pH (lower left corner), and the higher both acides concentrations, the lower the pH (upper right corner).</p>
+</div>
+<div id="density-vs-alcohol-and-fixed-acidity" class="section level2">
+<h2><span class="header-section-number">8.2</span> Density vs Alcohol and Fixed Acidity</h2>
+<pre class="r"><code>wine_reds$density_quantiles &lt;- cut_quantiles(&#39;density&#39;)
+plot_tri_var(&#39;alcohol&#39;, &#39;fixed.acidity&#39;, &#39;density_quantiles&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-47-1.png" width="672" /></p>
+<p>Fixed acidity is positively correlated with density, and alcohol is negatively correlated with density. We can see from the plot that fixed acidity has a larger impact on the density of wine than alcohol. Because for a given alcohol value, the density increases as fixed acidity increases, whereas for a given fixed acidity value, the density does not change as the alcohol increases.</p>
 </div>
 </div>
 

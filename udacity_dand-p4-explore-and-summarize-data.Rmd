@@ -396,7 +396,7 @@ There are a few attributes that are correlated based on physical and chemical pr
 
 Observing from the plot, volatile acidity has the strongest relationship with quality.
 
-# Multivariate exploration Part I
+# Multivariate Exploration Part I
 
 In this section, I will first look at how quality, volatile acidity and one other input variable are related.
 
@@ -452,4 +452,44 @@ plot_quality_vs_two_var('pH', 'volatile.acidity')
 
 High quality wines tend to have low volatile acidity and low pH (lower left corner); low quality wines tend to have high volatile acidity and high pH (upper right corner).
 
+# Multivariate Exploration Part II
+
+In this section, I will examine the relation among some of input variable triplets.
+```{r}
+# Function to cut given column from wine_reds data set into quantiles
+cut_quantiles <- function(var_to_cut) {
+  return (cut(wine_reds[[var_to_cut]], 
+              breaks = quantile(wine_reds[[var_to_cut]], 
+                                probs = seq(0, 1, 0.25),
+                                na.rm = TRUE),
+                                include.lowest = TRUE))
+}
+```
+
+```{r}
+# Function to plot scatter plot of variable2 vs variable1 colored by variable3
+plot_tri_var <- function(variable1, variable2, variable3){
+  ggplot(aes_string(x = variable1, y = variable2, color = variable3),
+         data = wine_reds) + 
+    geom_jitter() + 
+    scale_color_brewer(type = 'seq') + 
+    theme_dark()
+}
+```
+
+## pH vs Fixed Acidity and Citric Acid
+```{r}
+wine_reds$pH_quantiles <- cut_quantiles('pH')
+plot_tri_var('citric.acid', 'fixed.acidity', 'pH_quantiles')
+```
+
+Fixed acidity and citric acid both contribute to wines' pH values. The lower both acids concentrations, the higher the pH (lower left corner), and the higher both acides concentrations, the lower the pH (upper right corner).
+
+## Density vs Alcohol and Fixed Acidity
+```{r}
+wine_reds$density_quantiles <- cut_quantiles('density')
+plot_tri_var('alcohol', 'fixed.acidity', 'density_quantiles')
+```
+
+Fixed acidity is positively correlated with density, and alcohol is negatively correlated with density. We can see from the plot that fixed acidity has a larger impact on the density of wine than alcohol. Because for a given alcohol value, the density increases as fixed acidity increases, whereas for a given fixed acidity value, the density does not change as the alcohol increases.
 
