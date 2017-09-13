@@ -18,6 +18,7 @@ In this report, I will explore the red wine dataset. First, I will look at each 
 # Load all of the packages in this code chunk.
 library(ggplot2)
 library(corrplot)
+library(RColorBrewer)
 ```
 
 ```{r}
@@ -394,4 +395,61 @@ There are a few attributes that are correlated based on physical and chemical pr
 **What was the strongest relationship you found?**
 
 Observing from the plot, volatile acidity has the strongest relationship with quality.
+
+# Multivariate exploration Part I
+
+In this section, I will first look at how quality, volatile acidity and one other input variable are related.
+
+```{r}
+# Function to plot scatter plot of variable2 vs variable1 colored by quality
+plot_quality_vs_two_var <- function(variable1, variable2) {
+  ggplot(aes_string(x = variable1, y = variable2, color = 'quality'), data = wine_reds) +
+    geom_jitter(alpha = 1/2) +
+    scale_color_brewer(type = 'div')
+}
+```
+
+## Quality vs Volatile Acidity and Citric Acid
+```{r}
+plot_quality_vs_two_var('volatile.acidity', 'citric.acid')
+```
+
+High quality wines tend to have low volatile acidity and high citric acid (upper left corner); low quality wines tend to have high volatile acidity and low citric acid ( lower right corner).
+
+## Quality vs Volatile Acidity and Sulphates
+```{r}
+plot_quality_vs_two_var('sulphates', 'volatile.acidity')
+```
+
+High quality wines tend to have low volatile acidity and high sulphates (lower right corner); low quality wines tend to have high volatile acidity and low sulphates (upper left corner).
+
+## Quality vs Volatile Acidity and Alcohol
+```{r}
+plot_quality_vs_two_var('alcohol', 'volatile.acidity')
+```
+
+High quality wines tend to have low volatile acidity and high alcohol (lower right corner); low quality wines tend to have high volatile acidity and low alcohol (upper left corner).
+
+## Quality vs Volatile Acidity and Chlorides
+```{r}
+plot_quality_vs_two_var('chlorides', 'volatile.acidity') + 
+  scale_x_continuous(limits = c(0, 0.2))
+```
+
+High quality wines tend to have low volatile acidity and low chlorides (lower left corner); low quality wines tend to have high volatile acidity and high chlorides (upper right corner).
+
+## Quality vs Volatile Acidity and Density
+```{r}
+plot_quality_vs_two_var('density', 'volatile.acidity')
+```
+
+High quality wines tend to have low volatile acidity and low density (lower left corner); low quality wines tend to have high volatile acidity and high density (upper right corner).
+
+## Quality vs Volatile Acidity and pH
+```{r}
+plot_quality_vs_two_var('pH', 'volatile.acidity')
+```
+
+High quality wines tend to have low volatile acidity and low pH (lower left corner); low quality wines tend to have high volatile acidity and high pH (upper right corner).
+
 
