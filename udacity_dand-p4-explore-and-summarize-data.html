@@ -150,6 +150,16 @@ $(document).ready(function () {
 <li><a href="#quality-vs-sulphates"><span class="toc-section-number">4.10</span> Quality vs Sulphates</a></li>
 <li><a href="#quality-vs-alcohol"><span class="toc-section-number">4.11</span> Quality vs Alcohol</a></li>
 </ul></li>
+<li><a href="#bivariate-exploration-part-ii"><span class="toc-section-number">5</span> Bivariate Exploration Part II</a><ul>
+<li><a href="#correlation-matrix"><span class="toc-section-number">5.1</span> Correlation Matrix</a></li>
+<li><a href="#fixed-acidity-vs-citric-acid"><span class="toc-section-number">5.2</span> Fixed Acidity vs Citric Acid</a></li>
+<li><a href="#volatile-acidity-vs-citric-acid"><span class="toc-section-number">5.3</span> Volatile Acidity vs Citric Acid</a></li>
+<li><a href="#ph-vs-log10fixed-acidity"><span class="toc-section-number">5.4</span> pH vs log10(Fixed Acidity)</a></li>
+<li><a href="#ph-vs-citric-acid"><span class="toc-section-number">5.5</span> pH vs Citric Acid</a></li>
+<li><a href="#total-sulfur-dioxide-vs-free-sulfur-dioxide"><span class="toc-section-number">5.6</span> Total Sulfur Dioxide vs Free Sulfur Dioxide</a></li>
+<li><a href="#density-vs-alcohol"><span class="toc-section-number">5.7</span> Density vs Alcohol</a></li>
+<li><a href="#density-vs-fixed-acidity"><span class="toc-section-number">5.8</span> Density vs Fixed Acidity</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -157,7 +167,8 @@ $(document).ready(function () {
 <h1><span class="header-section-number">1</span> Introduction</h1>
 <p>In this report, I will explore the red wine dataset. First, I will look at each individual attribute of this dataset and plot its distribution. Second, I will look at two attributes at a time to explore 1) how each input attribute is related to the output attribute–quality; 2) interesting pairs of input attributes. Third, I will examine three attributes by adding one additional attribute to some of the interesting two-attribute pairs. Finally, I will summarize the successes and problems I encounter during the data exploration process.</p>
 <pre class="r"><code># Load all of the packages in this code chunk.
-library(ggplot2)</code></pre>
+library(ggplot2)
+library(corrplot)</code></pre>
 <pre class="r"><code># Load the Data
 wine_reds = read.csv(&#39;wineQualityReds.csv&#39;, row.names = 1)</code></pre>
 </div>
@@ -404,6 +415,78 @@ plot_quality_vs_var &lt;- function(variable) {
 <pre class="r"><code>plot_quality_vs_var(&#39;alcohol&#39;)</code></pre>
 <p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-27-1.png" width="672" /></p>
 <p>The higher the quality, the higher the alcohol.</p>
+</div>
+</div>
+<div id="bivariate-exploration-part-ii" class="section level1">
+<h1><span class="header-section-number">5</span> Bivariate Exploration Part II</h1>
+<p>In this section, I will first plot the correlation matrix to find out if there are any interesting pairs of input attributes that look interesting. Then I will examine these pairs.</p>
+<div id="correlation-matrix" class="section level2">
+<h2><span class="header-section-number">5.1</span> Correlation Matrix</h2>
+<pre class="r"><code>cor_matrix &lt;- cor(wine_reds[, 1:11])
+corrplot(cor_matrix, type = &#39;lower&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-28-1.png" width="672" /></p>
+<p>There are a few pairs of input variables deserve further examing from the correlation matrix plot: fixed acidity vs citric acid, fixed acidity vs density, fixed acidity vs pH, volatile acidity vs citric acid, citric acid vs pH, total sulfur dioxide vs free sulfur dioxide, density vs alcohol.</p>
+<pre class="r"><code># Function to plot scatter plot of variable2 vs variable1
+plot_bi_var &lt;- function(variable1, variable2) {
+  return (ggplot(aes_string(x = variable1, y = variable2), data = wine_reds) + 
+    geom_point(alpha = 1/4, position = position_jitter(width = 0)))
+}</code></pre>
+</div>
+<div id="fixed-acidity-vs-citric-acid" class="section level2">
+<h2><span class="header-section-number">5.2</span> Fixed Acidity vs Citric Acid</h2>
+<pre class="r"><code>plot_bi_var(&#39;citric.acid&#39;, &#39;fixed.acidity&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-30-1.png" width="672" /></p>
+<pre class="r"><code>cor(wine_reds$citric.acid, wine_reds$fixed.acidity)</code></pre>
+<pre><code>## [1] 0.6717034</code></pre>
+<p>Fixed acidity and citric acid have a correlation coefficient of 0.6717034. This is probably because citric acid is also a kind of fixed acidity.</p>
+</div>
+<div id="volatile-acidity-vs-citric-acid" class="section level2">
+<h2><span class="header-section-number">5.3</span> Volatile Acidity vs Citric Acid</h2>
+<pre class="r"><code>plot_bi_var(&#39;citric.acid&#39;, &#39;volatile.acidity&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-31-1.png" width="672" /></p>
+<pre class="r"><code>cor(wine_reds$citric.acid, wine_reds$volatile.acidity)</code></pre>
+<pre><code>## [1] -0.5524957</code></pre>
+<p>Volatile acidity and citric acid have a correlation coefficient of -0.5524957. I cannot think of an explaination for this correlation.</p>
+</div>
+<div id="ph-vs-log10fixed-acidity" class="section level2">
+<h2><span class="header-section-number">5.4</span> pH vs log10(Fixed Acidity)</h2>
+<pre class="r"><code>plot_bi_var(&#39;log10(fixed.acidity)&#39;, &#39;pH&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-32-1.png" width="672" /></p>
+<pre class="r"><code>cor(log10(wine_reds$fixed.acidity), wine_reds$pH)</code></pre>
+<pre><code>## [1] -0.7063602</code></pre>
+<p>The pH scale is logarithmic, so I first transform fixed acidity into log10(fixed acidity). log10(fixed acidity) and pH have a correlation coefficient of -0.7063602. This is because hihger fixed acidity concentration leads to lower pH values.</p>
+</div>
+<div id="ph-vs-citric-acid" class="section level2">
+<h2><span class="header-section-number">5.5</span> pH vs Citric Acid</h2>
+<pre class="r"><code>plot_bi_var(&#39;citric.acid&#39;, &#39;pH&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-33-1.png" width="672" /></p>
+<pre class="r"><code>cor(wine_reds$citric.acid, wine_reds$pH)</code></pre>
+<pre><code>## [1] -0.5419041</code></pre>
+<p>Citric acid and pH have a correlation coefficient of -0.5419041. Because we have 132 wines with 0 citric acid values, we cannot perform a logarithmic transfrom here. The correaltion is due to citric acid is non volatile, therefore higher citiric acid concentration leads to lower pH value.</p>
+</div>
+<div id="total-sulfur-dioxide-vs-free-sulfur-dioxide" class="section level2">
+<h2><span class="header-section-number">5.6</span> Total Sulfur Dioxide vs Free Sulfur Dioxide</h2>
+<pre class="r"><code>plot_bi_var(&#39;free.sulfur.dioxide&#39;, &#39;total.sulfur.dioxide&#39;) + geom_abline(slope=1)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-34-1.png" width="672" /></p>
+<pre class="r"><code>cor(wine_reds$free.sulfur.dioxide, wine_reds$total.sulfur.dioxide)</code></pre>
+<pre><code>## [1] 0.6676665</code></pre>
+<p>Total sulfur dioxide and free sulfur dioxide have a correlation coefficient of 0.6676665. This is because free sulfur dioxide is part of total sulfur dioxide, and this can also be seen from all the points are above the y=x line.</p>
+</div>
+<div id="density-vs-alcohol" class="section level2">
+<h2><span class="header-section-number">5.7</span> Density vs Alcohol</h2>
+<pre class="r"><code>plot_bi_var(&#39;alcohol&#39;, &#39;density&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-35-1.png" width="672" /></p>
+<pre class="r"><code>cor(wine_reds$alcohol, wine_reds$density)</code></pre>
+<pre><code>## [1] -0.4961798</code></pre>
+<p>Density and alcohol have a correlation coefficient of -0.4961798. This is probably because alcohol has a lower density comparing to water. Therefore, the higher concentration of alcohol, the lower the wine density is.</p>
+</div>
+<div id="density-vs-fixed-acidity" class="section level2">
+<h2><span class="header-section-number">5.8</span> Density vs Fixed Acidity</h2>
+<pre class="r"><code>plot_bi_var(&#39;fixed.acidity&#39;, &#39;density&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-36-1.png" width="672" /></p>
+<pre class="r"><code>cor(wine_reds$fixed.acidity, wine_reds$density)</code></pre>
+<pre><code>## [1] 0.6680473</code></pre>
+<p>Densidy and fixed acidity have a correlation coefficient of 0.6680473. This is probably because fixed acidity in wine is mainly tartaric acid, and tartaric acid has a density of 1.79 g/mL, which is greater than the wine’s main component–water. Therefore, higher concentration of fixed acidity leads to higher density value.</p>
 </div>
 </div>
 

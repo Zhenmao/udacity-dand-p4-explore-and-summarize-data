@@ -17,6 +17,7 @@ In this report, I will explore the red wine dataset. First, I will look at each 
 ```{r, packages}
 # Load all of the packages in this code chunk.
 library(ggplot2)
+library(corrplot)
 ```
 
 ```{r}
@@ -273,4 +274,81 @@ plot_quality_vs_var('alcohol')
 ```
 
 The higher the quality, the higher the alcohol.
+
+# Bivariate Exploration Part II
+
+In this section, I will first plot the correlation matrix to find out if there are any interesting pairs of input attributes that look interesting. Then I will examine these pairs.
+
+## Correlation Matrix
+```{r}
+cor_matrix <- cor(wine_reds[, 1:11])
+corrplot(cor_matrix, type = 'lower')
+```
+
+There are a few pairs of input variables deserve further examing from the correlation matrix plot: fixed acidity vs citric acid, fixed acidity vs density, fixed acidity vs pH, volatile acidity vs citric acid, citric acid vs pH, total sulfur dioxide vs free sulfur dioxide, density vs alcohol.
+
+```{r}
+# Function to plot scatter plot of variable2 vs variable1
+plot_bi_var <- function(variable1, variable2) {
+  return (ggplot(aes_string(x = variable1, y = variable2), data = wine_reds) + 
+    geom_point(alpha = 1/4, position = position_jitter(width = 0)))
+}
+```
+
+## Fixed Acidity vs Citric Acid
+```{r}
+plot_bi_var('citric.acid', 'fixed.acidity')
+cor(wine_reds$citric.acid, wine_reds$fixed.acidity)
+```
+
+Fixed acidity and citric acid have a correlation coefficient of 0.6717034. This is probably because citric acid is also a kind of fixed acidity.
+
+## Volatile Acidity vs Citric Acid
+```{r}
+plot_bi_var('citric.acid', 'volatile.acidity')
+cor(wine_reds$citric.acid, wine_reds$volatile.acidity)
+```
+
+Volatile acidity and citric acid have a correlation coefficient of -0.5524957. I cannot think of an explaination for this correlation. 
+
+## pH vs log10(Fixed Acidity)
+```{r}
+plot_bi_var('log10(fixed.acidity)', 'pH')
+cor(log10(wine_reds$fixed.acidity), wine_reds$pH)
+```
+
+The pH scale is logarithmic, so I first transform fixed acidity into log10(fixed acidity). log10(fixed acidity) and pH have a correlation coefficient of -0.7063602. This is because hihger fixed acidity concentration leads to lower pH values.
+
+## pH vs Citric Acid
+```{r}
+plot_bi_var('citric.acid', 'pH')
+cor(wine_reds$citric.acid, wine_reds$pH)
+```
+
+Citric acid and pH have a correlation coefficient of -0.5419041. Because we have 132 wines with 0 citric acid values, we cannot perform a logarithmic transfrom here. The correaltion is due to citric acid is non volatile, therefore higher citiric acid concentration leads to lower pH value.
+
+## Total Sulfur Dioxide vs Free Sulfur Dioxide
+```{r}
+plot_bi_var('free.sulfur.dioxide', 'total.sulfur.dioxide') + geom_abline(slope=1)
+cor(wine_reds$free.sulfur.dioxide, wine_reds$total.sulfur.dioxide)
+```
+
+Total sulfur dioxide and free sulfur dioxide have a correlation coefficient of 0.6676665. This is because free sulfur dioxide is part of total sulfur dioxide, and this can also be seen from all the points are above the y=x line.
+
+## Density vs Alcohol
+```{r}
+plot_bi_var('alcohol', 'density')
+cor(wine_reds$alcohol, wine_reds$density)
+```
+
+Density and alcohol have a correlation coefficient of -0.4961798. This is probably because alcohol has a lower density comparing to water. Therefore, the higher concentration of alcohol, the lower the wine density is.
+
+## Density vs Fixed Acidity
+```{r}
+plot_bi_var('fixed.acidity', 'density')
+cor(wine_reds$fixed.acidity, wine_reds$density)
+```
+
+Densidy and fixed acidity have a correlation coefficient of 0.6680473. This is probably because fixed acidity in wine is mainly tartaric acid, and tartaric acid has a density of 1.79 g/mL, which is greater than the wine's main component--water. Therefore, higher concentration of fixed acidity leads to higher density value.
+
 
