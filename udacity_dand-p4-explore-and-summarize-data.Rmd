@@ -552,9 +552,9 @@ The possible quality values are ranging from 0 to 10, however, all red wines in 
 ```{r, message=FALSE}
 plot_quality_vs_two_var('sulphates', 'volatile.acidity') + 
   scale_x_continuous(limits = c(min(wine_reds$sulphates), 
-                                quartile(wine_reds$sulphates, 0.99))) +
+                                quantile(wine_reds$sulphates, 0.99))) +
   scale_y_continuous(limits = c(min(wine_reds$volatile.acidity), 
-                                quartile(wine_reds$volatile.acidity, 0.99))) +
+                                quantile(wine_reds$volatile.acidity, 0.99))) +
   scale_color_brewer(type = 'div', name = 'Quality') +
   xlab(expression(Sulphates~(g~dm^{-3}))) + 
   ylab(expression(Volatile~Acidity~(g~dm^{-3}))) + 
@@ -573,9 +573,11 @@ plot_tri_var('alcohol', 'fixed.acidity', 'density_quartiles') +
   xlab(expression(Alcohol~('%'))) + 
   ylab(expression(Fixed~Acidity~(g~dm^{-3}))) + 
   ggtitle('Density vs Fixed Acidity and Alcohol') +
-  scale_color_brewer(name = expression(Density~quartiles~(g~cm^{-3})), type = 'seq') +
+  scale_color_brewer(name = expression(Density~(g~cm^{-3})), type = 'seq') +
   theme(panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         panel.background = element_blank())
 ```
+
+Fixed acidity is positively correlated with density, and alcohol is negatively correlated with density. The fixed acidity has a larger impact on the density of wine than alcohol. Because for a given alcohol value, the density increases (from light blue to dark blue) as fixed acidity increases, whereas for a given fixed acidity value, the density does not change much as the alcohol increases.
 
