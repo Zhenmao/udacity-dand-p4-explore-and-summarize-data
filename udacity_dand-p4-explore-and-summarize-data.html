@@ -175,6 +175,9 @@ $(document).ready(function () {
 </ul></li>
 <li><a href="#linear-models"><span class="toc-section-number">9</span> Linear Models</a></li>
 <li><a href="#multivariate-analysis"><span class="toc-section-number">10</span> Multivariate Analysis</a></li>
+<li><a href="#final-plots"><span class="toc-section-number">11</span> Final Plots</a><ul>
+<li><a href="#plot-i"><span class="toc-section-number">11.1</span> Plot I</a></li>
+</ul></li>
 </ul>
 </div>
 
@@ -186,16 +189,6 @@ library(ggplot2)
 library(corrplot)
 library(RColorBrewer)
 library(memisc)</code></pre>
-<pre><code>## Loading required package: lattice</code></pre>
-<pre><code>## Loading required package: MASS</code></pre>
-<pre><code>## 
-## Attaching package: &#39;memisc&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:stats&#39;:
-## 
-##     contr.sum, contr.treatment, contrasts</code></pre>
-<pre><code>## The following object is masked from &#39;package:base&#39;:
-## 
-##     as.array</code></pre>
 <pre class="r"><code># Load the Data
 wine_reds = read.csv(&#39;wineQualityReds.csv&#39;, row.names = 1)</code></pre>
 </div>
@@ -755,6 +748,24 @@ mtable(m1, m2, m3, sdigits = 3)</code></pre>
 <p>By looking at density vs fixed acidity and alcohol, one can see that fixed acidity has a larger impact on the density of the wine than alcohol.</p>
 <p><strong>OPTIONAL: Did you create any models with your dataset? Discuss the strengths and limitations of your model.</strong></p>
 <p>I created three linear models to predict the output attribute quality. The strength of the model is that it is a simple linear model and it is easy to interpret. However, because the quality values are discrete integer values, the model is less accurate comparing to a more nuanced continuous quality value model. Also due to the limitation of the dataset, only physical and chemical attributes are available, and other import attributes, such as price, color, smell, etc are missing. The other attributes may influence the quality values to a large extent.</p>
+</div>
+<div id="final-plots" class="section level1">
+<h1><span class="header-section-number">11</span> Final Plots</h1>
+<div id="plot-i" class="section level2">
+<h2><span class="header-section-number">11.1</span> Plot I</h2>
+<pre class="r"><code>ggplot(aes(x = quality), data = wine_reds) + 
+  geom_bar(aes(y = (..count..)/sum(..count..))) +
+  geom_text(aes(y = ((..count..)/sum(..count..)), 
+            label = scales::percent((..count..)/sum(..count..))), 
+            stat = &quot;count&quot;, 
+            vjust = -0.25) +
+  scale_y_continuous(labels = scales::percent) + 
+  xlab(&#39;Quality&#39;) + 
+  ylab(&#39;Percent&#39;) + 
+  ggtitle(&#39;Quality Relative Frequency Histogram&#39;)</code></pre>
+<p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-49-1.png" width="672" /></p>
+<p>The possible quality values are ranging from 0 to 10, however, all red wines in the dataset have quality values between 3 and 8. There is no any really bad wine with quality below 3 or any really good wine with quality above 8. Also, most of the red wines have quality 5 or 6, which make the dataset not well balanced.</p>
+</div>
 </div>
 
 
