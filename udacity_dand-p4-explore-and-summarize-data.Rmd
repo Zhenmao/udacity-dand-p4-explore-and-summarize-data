@@ -457,10 +457,10 @@ High quality wines tend to have low volatile acidity and low pH (lower left corn
 
 In this section, I will examine the relation among some of input variable triplets.
 ```{r}
-# Function to cut given column from wine_reds data set into quartiles
-cut_quartiles <- function(var_to_cut) {
+# Function to cut given column from wine_reds data set into quantiles
+cut_quantiles <- function(var_to_cut) {
   return (cut(wine_reds[[var_to_cut]], 
-              breaks = quartile(wine_reds[[var_to_cut]], 
+              breaks = quantile(wine_reds[[var_to_cut]], 
                                 probs = seq(0, 1, 0.25),
                                 na.rm = TRUE),
                                 include.lowest = TRUE))
@@ -480,16 +480,16 @@ plot_tri_var <- function(variable1, variable2, variable3){
 
 ## pH vs Fixed Acidity and Citric Acid
 ```{r}
-wine_reds$pH_quartiles <- cut_quartiles('pH')
-plot_tri_var('citric.acid', 'fixed.acidity', 'pH_quartiles')
+wine_reds$pH_quantiles <- cut_quantiles('pH')
+plot_tri_var('citric.acid', 'fixed.acidity', 'pH_quantiles')
 ```
 
 Fixed acidity and citric acid both contribute to wines' pH values. The lower both acids concentrations, the higher the pH (lower left corner), and the higher both acides concentrations, the lower the pH (upper right corner).
 
 ## Density vs Alcohol and Fixed Acidity
 ```{r}
-wine_reds$density_quartiles <- cut_quartiles('density')
-plot_tri_var('alcohol', 'fixed.acidity', 'density_quartiles')
+wine_reds$density_quantiles <- cut_quantiles('density')
+plot_tri_var('alcohol', 'fixed.acidity', 'density_quantiles')
 ```
 
 Fixed acidity is positively correlated with density, and alcohol is negatively correlated with density. We can see from the plot that fixed acidity has a larger impact on the density of wine than alcohol. Because for a given alcohol value, the density increases as fixed acidity increases, whereas for a given fixed acidity value, the density does not change as the alcohol increases.
@@ -530,7 +530,7 @@ I created three linear models to predict the output attribute quality. The stren
 
 # Final Plots
 ## Plot I
-```{r, message=FALSE}
+```{r}
 ggplot(aes(x = quality), data = wine_reds) + 
   geom_bar(aes(y = (..count..)/sum(..count..))) +
   geom_text(aes(y = ((..count..)/sum(..count..)), 
@@ -549,12 +549,12 @@ ggplot(aes(x = quality), data = wine_reds) +
 The possible quality values are ranging from 0 to 10, however, all red wines in the dataset have quality values between 3 and 8. There is no any really bad wine with quality below 3 or any really good wine with quality above 8. Also, most of the red wines have quality 5 or 6, which make the dataset not well balanced. 
 
 ## Plot II
-```{r, message=FALSE}
+```{r}
 plot_quality_vs_two_var('sulphates', 'volatile.acidity') + 
   scale_x_continuous(limits = c(min(wine_reds$sulphates), 
-                                quartile(wine_reds$sulphates, 0.99))) +
+                                quantile(wine_reds$sulphates, 0.99))) +
   scale_y_continuous(limits = c(min(wine_reds$volatile.acidity), 
-                                quartile(wine_reds$volatile.acidity, 0.99))) +
+                                quantile(wine_reds$volatile.acidity, 0.99))) +
   scale_color_brewer(type = 'div', name = 'Quality') +
   xlab(expression(Sulphates~(g~dm^{-3}))) + 
   ylab(expression(Volatile~Acidity~(g~dm^{-3}))) + 
@@ -565,17 +565,4 @@ plot_quality_vs_two_var('sulphates', 'volatile.acidity') +
 ```
 
 Excluding the upper 1% outliers, one can see from the plot that higher quality wines (dark green) tend to have low volatile acidity and high sulphates (lower right corner), while lower quality wines (dark brown) tend to have high volatile acidity and low sulphates (upper left corner).
-
-## Plot III
-```{r, message=FALSE}
-wine_reds$pH_quartiles <- cut_quartiles('density')
-plot_tri_var('alcohol', 'fixed.acidity', 'density_quartiles') +
-  xlab(expression(Alcohol~('%'))) + 
-  ylab(expression(Fixed~Acidity~(g~dm^{-3}))) + 
-  ggtitle('Density vs Fixed Acidity and Alcohol') +
-  scale_color_brewer(name = expression(Density~quartiles~(g~cm^{-3})), type = 'seq') +
-  theme(panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank())
-```
 
