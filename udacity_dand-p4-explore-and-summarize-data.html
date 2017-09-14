@@ -180,6 +180,7 @@ $(document).ready(function () {
 <li><a href="#plot-ii"><span class="toc-section-number">11.2</span> Plot II</a></li>
 <li><a href="#plot-iii"><span class="toc-section-number">11.3</span> Plot III</a></li>
 </ul></li>
+<li><a href="#reflection"><span class="toc-section-number">12</span> Reflection</a></li>
 </ul>
 </div>
 
@@ -623,7 +624,7 @@ plot_quality_vs_two_var &lt;- function(variable1, variable2) {
 <h2><span class="header-section-number">7.4</span> Quality vs Volatile Acidity and Chlorides</h2>
 <pre class="r"><code>plot_quality_vs_two_var(&#39;chlorides&#39;, &#39;volatile.acidity&#39;) + 
   scale_x_continuous(limits = c(0, 0.2))</code></pre>
-<pre><code>## Warning: Removed 42 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 41 rows containing missing values (geom_point).</code></pre>
 <p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-41-1.png" width="672" /></p>
 <p>High quality wines tend to have low volatile acidity and low chlorides (lower left corner); low quality wines tend to have high volatile acidity and high chlorides (upper right corner).</p>
 </div>
@@ -785,7 +786,7 @@ mtable(m1, m2, m3, sdigits = 3)</code></pre>
   theme(panel.grid.major = element_blank(), 
         panel.grid.minor = element_blank(),
         panel.background = element_blank())</code></pre>
-<pre><code>## Warning: Removed 37 rows containing missing values (geom_point).</code></pre>
+<pre><code>## Warning: Removed 35 rows containing missing values (geom_point).</code></pre>
 <p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-50-1.png" width="672" /></p>
 <p>Excluding the upper 1% outliers, one can see from the plot that higher quality wines (dark green) tend to have low volatile acidity and high sulphates (lower right corner), while lower quality wines (dark brown) tend to have high volatile acidity and low sulphates (upper left corner).</p>
 </div>
@@ -803,6 +804,21 @@ plot_tri_var(&#39;alcohol&#39;, &#39;fixed.acidity&#39;, &#39;density_quartiles&
 <p><img src="udacity_dand-p4-explore-and-summarize-data_files/figure-html/unnamed-chunk-51-1.png" width="672" /></p>
 <p>Fixed acidity is positively correlated with density, and alcohol is negatively correlated with density. The fixed acidity has a larger impact on the density of wine than alcohol. Because for a given alcohol value, the density increases (from light blue to dark blue) as fixed acidity increases, whereas for a given fixed acidity value, the density does not change much as the alcohol increases.</p>
 </div>
+</div>
+<div id="reflection" class="section level1">
+<h1><span class="header-section-number">12</span> Reflection</h1>
+<p>The red wine data set has 11 input physicochemical attributes and 1 quality output attribute. Throughout the analysis, I focused on answering two quations:</p>
+<ul>
+<li><ol style="list-style-type: decimal">
+<li>How are different input physicochemical attributes related to the quality output attribute?</li>
+</ol></li>
+<li><ol start="2" style="list-style-type: decimal">
+<li>Are there interesting relations among input physicochemical attributes?</li>
+</ol></li>
+</ul>
+<p>I ran into difficulties when answering question 1. There were many combinations of the 11 input attributes I could pick to plot against the quality attribute. But I did not have good criteria to determine the order of importance of these attributes. I relied on visualization and chose the volatile acidicy as the most promising attribute and used it as the fixed attribute during multivariate plot section.</p>
+<p>I did observe some good results when answering question 2. The plots showing between and among different input physicochemical attributes were in accordance with actual physical and chemical properties and laws, such high acid concentration correlates with low pH, and high alcohol percent correlates with low density.</p>
+<p>I believe by incorporating other types of attributes, such as price, color and smell, I can build a better model to predict the quality of wine than using only physicochemical attributes. Also, one more interesting project can be combining the red wine data set with the white wine data set, and to find out if attributes correlate to high quality red wines also correlate to high quality white wines.</p>
 </div>
 
 

@@ -581,3 +581,15 @@ plot_tri_var('alcohol', 'fixed.acidity', 'density_quartiles') +
 
 Fixed acidity is positively correlated with density, and alcohol is negatively correlated with density. The fixed acidity has a larger impact on the density of wine than alcohol. Because for a given alcohol value, the density increases (from light blue to dark blue) as fixed acidity increases, whereas for a given fixed acidity value, the density does not change much as the alcohol increases.
 
+# Reflection
+
+The red wine data set has 11 input physicochemical attributes and 1 quality output attribute. Throughout the analysis, I focused on answering two quations: 
+
+* 1. How are different input physicochemical attributes related to the quality output attribute? 
+* 2. Are there interesting relations among input physicochemical attributes?
+
+I ran into difficulties when answering question 1. There were many combinations of the 11 input attributes I could pick to plot against the quality attribute. But I did not have good criteria to determine the order of importance of these attributes. I relied on visualization and chose the volatile acidicy as the most promising attribute and used it as the fixed attribute during multivariate plot section.
+
+I did observe some good results when answering question 2. The plots showing between and among different input physicochemical attributes were in accordance with actual physical and chemical properties and laws, such high acid concentration correlates with low pH, and high alcohol percent correlates with low density.
+
+I believe by incorporating other types of attributes, such as price, color and smell, I can build a better model to predict the quality of wine than using only physicochemical attributes. Also, one more interesting project can be combining the red wine data set with the white wine data set, and to find out if attributes correlate to high quality red wines also correlate to high quality white wines.
