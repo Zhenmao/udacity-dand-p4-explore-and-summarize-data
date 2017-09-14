@@ -540,8 +540,24 @@ ggplot(aes(x = quality), data = wine_reds) +
   scale_y_continuous(labels = scales::percent) + 
   xlab('Quality') + 
   ylab('Percent') + 
-  ggtitle('Quality Relative Frequency Histogram')
+  ggtitle('Quality Relative Frequency Histogram') +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        panel.background = element_blank())
 ```
 
 The possible quality values are ranging from 0 to 10, however, all red wines in the dataset have quality values between 3 and 8. There is no any really bad wine with quality below 3 or any really good wine with quality above 8. Also, most of the red wines have quality 5 or 6, which make the dataset not well balanced. 
+
+## Plot II
+```{r}
+plot_quality_vs_two_var('sulphates', 'volatile.acidity') + 
+  scale_x_continuous(limits = c(min(wine_reds$sulphates), 
+                                quantile(wine_reds$sulphates, 0.99))) +
+  scale_y_continuous(limits = c(min(wine_reds$volatile.acidity), 
+                                quantile(wine_reds$volatile.acidity, 0.99))) +
+  scale_color_brewer(type = 'div', name = 'Quality') +
+  xlab(expression(Sulphates~(g~dm^{-3}))) + 
+  ylab(expression(Volatile~Acidity~(g~dm^{-3}))) + 
+  ggtitle('Quality vs Volatile Acidity and Sulphates')
+```
 
